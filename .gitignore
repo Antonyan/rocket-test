@@ -1,0 +1,50 @@
+config/config.ini
+
+# Gradle
+# ------
+.gradle
+/build
+
+# Reports
+# -------
+/target
+
+# IDEA
+# ----
+.idea
+.shelf
+/*.iml
+/*.ipr
+/*.iws
+/out
+
+# Vim
+# ---
+*.sw[op]
+
+# Emacs
+# -----
+*~
+\#*\#
+.\#*
+
+# Textmate
+# --------
+.textmate
+
+# Sublime Text
+# ------------
+*.sublime-*
+
+# macOS
+# ----
+.DS_Store
+
+# Logs
+# ----
+/*.log
+
+/config/api.ini
+/config/db.ini
+/config/mobile.ini
+/config/web.ini
