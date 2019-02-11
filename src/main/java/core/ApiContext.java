@@ -37,10 +37,12 @@ public class ApiContext
     HttpRequest defaultRestApiHttpRequestBasicAuth;
 
     @Autowired
-    JsonClient jsonClient;
-
-    @Autowired
     Config config;
+
+    @Bean
+    public JsonClient jsonClient() {
+        return new JsonClient();
+    }
 
     @Bean
     public Config apiConfig() {
@@ -49,12 +51,12 @@ public class ApiContext
 
     @Bean
     public EndpointService restApiSimple(){
-        return new EndpointService(httpRequestService, defaultRestApiHttpRequest, jsonClient);
+        return new EndpointService(httpRequestService, defaultRestApiHttpRequest, jsonClient());
     }
 
     @Bean
     public EndpointService restApiBasicAuth(){
-        return new EndpointService(httpRequestService, defaultRestApiHttpRequestBasicAuth, jsonClient);
+        return new EndpointService(httpRequestService, defaultRestApiHttpRequestBasicAuth, jsonClient());
     }
 
     @Bean
@@ -64,12 +66,12 @@ public class ApiContext
 
     @Bean
     public EndpointService restApiOAuth2(){
-        return new EndpointService(httpRequestService, defaultRestApiOAuth2HttpRequest(), jsonClient);
+        return new EndpointService(httpRequestService, defaultRestApiOAuth2HttpRequest(), jsonClient());
     }
 
     @Bean
     public CustomizedEndpointService restApi(){
-        return new CustomizedEndpointService(httpRequestService, defaultRestApiHttpRequest, jsonClient, apiConfig());
+        return new CustomizedEndpointService(httpRequestService, defaultRestApiHttpRequest, jsonClient(), apiConfig());
     }
 
     @Bean
