@@ -36,7 +36,7 @@ public class DatabaseAssert {
         return this;
     }
 
-    private boolean isDataInDatabase(String table, HashMap data) {
+    public boolean isDataInDatabase(String table, HashMap data) {
         boolean isPresent = false;
 
         String sql = "SELECT count(*) FROM " + table + lightQueryBuilder.buildWhereCondition(data);
