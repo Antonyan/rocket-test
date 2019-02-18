@@ -49,16 +49,7 @@ public class Database {
     }
 
     public Integer findElementId(String table, Map<String, String> data){
-        String sql = "SELECT id FROM " + table + lightQueryBuilder.buildWhereCondition(data);
-        Integer id;
-
-        try {
-            id = jdbcTemplate.queryForObject(sql, Integer.class);
-        } catch (EmptyResultDataAccessException e) {
-            id = null;
-        }
-
-        return id;
+        return findElementId(table, "id", data);
     }
 
     public Integer findElementId(String table, String identifierName, Map<String, String> data){
