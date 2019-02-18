@@ -65,16 +65,13 @@ public class Database {
         return id;
     }
 
-    public Integer numberOfElementsInTable(String table, Map<String, String> data){
-        String sql = "SELECT COUNT(*) FROM " + table + lightQueryBuilder.buildWhereCondition(data);
-
-        Integer count;
-
-        count = jdbcTemplate.queryForObject(sql, Integer.class);
-
-        return count;
-
+    public Integer numberOfElementsInTable(String table, Map<String, String> data) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM " + table + lightQueryBuilder.buildWhereCondition(data),
+                Integer.class
+        );
     }
+
     public Database haveInTable(DbQueryMetadata dbQueryMetadata){
         String sql = lightQueryBuilder.buildInsert(dbQueryMetadata.getTableName(), dbQueryMetadata.getTableData());
         jdbcTemplate.update(sql);
