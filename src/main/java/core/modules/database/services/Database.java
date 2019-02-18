@@ -48,8 +48,8 @@ public class Database {
         return this;
     }
 
-    public Integer findElementId(String table, Map<String, String> data){
-        String sql = "SELECT id FROM " + table + lightQueryBuilder.buildWhereCondition(data);
+    public Integer findElementId(String table, String identifierName, Map<String, String> data){
+        String sql = "SELECT " +  identifierName + " FROM " + table + lightQueryBuilder.buildWhereCondition(data);
         Integer id;
 
         try {
