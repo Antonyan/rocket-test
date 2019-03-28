@@ -29,10 +29,10 @@ public class LightQueryBuilder {
     }
 
     private String getCondition(String fieldName,  String value) {
-        if (value != null) {
-            return fieldName + "=\"" + value + "\"";
-        } else {
+        if (value == null) {
             return fieldName + " IS NULL";
         }
+
+        return fieldName + "=\"" + value + "\"";
     }
 }
