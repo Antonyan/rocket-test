@@ -1,16 +1,15 @@
 package core.modules.database.services;
 
-import java.util.List;
 import java.util.Map;
 
 public class LightQueryBuilder {
 
     public String buildWhereCondition (Map<String, String> data) {
 
-        String where = " WHERE ";
+        StringBuilder where = new StringBuilder(" WHERE ");
 
         for (Map.Entry<String, String>  entry : data.entrySet()) {
-            where = where + entry.getKey() + "=\"" + entry.getValue() + "\"" + " AND ";
+            where.append(getCondition(entry.getKey(), entry.getValue())).append(" AND ");
         }
 
         return where.substring(0, where.length() - 5);
@@ -26,9 +25,14 @@ public class LightQueryBuilder {
     }
 
     public String buildDeleteAllDataFromTable (String table) {
-
-
-
         return "DELETE IGNORE FROM " + table;
+    }
+
+    private String getCondition(String fieldName,  String value) {
+        if (value == null) {
+            return fieldName + " IS NULL";
+        }
+
+        return fieldName + "=\"" + value + "\"";
     }
 }
