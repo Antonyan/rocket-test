@@ -46,13 +46,7 @@ public class WebAssertion {
 
     }
 
-    public void shouldBeDisplayed(boolean condition) {
-        if (condition) {
-            Assert.assertTrue(elementForAssert.isDisplayed(), "Element " + elementForAssert.toString() + " is not displayed");
-            return;
-        }
-        Assert.assertFalse(elementForAssert.isDisplayed(), "Element " + elementForAssert.toString() + " is displayed");
-    }
+    //TODO: add few more methods to support javascript, css and xpath assertions
 
     public void shouldBeVisibleByCss(boolean condition, String cssSelector) {
         if (condition) {
