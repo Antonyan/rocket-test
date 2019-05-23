@@ -1,7 +1,6 @@
 package core.modules.web.models;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -13,6 +12,7 @@ import java.util.List;
 public class Web {
 
     private WebDriver driver;
+    private JavascriptExecutor js;
     private String baseAdminUrl;
 
     //TODO: use autowiring for driver
@@ -38,39 +38,67 @@ public class Web {
     }
 
     //TODO: code duplication. Follow DRY principle
-    public WebElement findElementByXpath(String xpath){
+    public <T extends Enum> WebElement findElementByXpath(T xpath) {
+        try {
+            return driver.findElement(By.xpath(String.valueOf(xpath)));
+        } catch (Exception e) {
+            Assert.fail("Element with xpath + " + xpath + "not found");
+            return null;
+        }
+    }
+
+    public WebElement findElementByXpath(String xpath) {
         try {
             return driver.findElement(By.xpath(xpath));
         } catch (Exception e) {
-            Assert.fail( "Element with xpath + " + xpath + "not found");
+            Assert.fail("Element with xpath + " + xpath + "not found");
             return null;
         }
     }
 
-    public WebElement findElementByCss(String css){
+    public <T extends Enum> WebElement findElementByCss(T css) {
+        try {
+            return driver.findElement(By.cssSelector(String.valueOf(css)));
+        } catch (Exception e) {
+            Assert.fail("Element with xpath + " + css + "not found");
+            return null;
+        }
+    }
+
+    public WebElement findElementByCss(String css) {
         try {
             return driver.findElement(By.cssSelector(css));
         } catch (Exception e) {
-            Assert.fail("Element with css + " + css + "not found" );
+            Assert.fail("Element with css + " + css + "not found");
             return null;
         }
     }
 
-    public CustomWebElement useElementByLinkText (String text) {
+    public CustomWebElement useElementByLinkText(String text) {
         WebElement element = driver.findElement(By.linkText(text));
-    return new CustomWebElement(element, this, driver);
+        return new CustomWebElement(element, this, driver);
     }
 
-    public Web switchToNewTab () {
-        for(String winHandle : driver.getWindowHandles()){
+    public Web switchToNewTab() {
+        for (String winHandle : driver.getWindowHandles()) {
             driver.switchTo().window(winHandle);
         }
         return this;
     }
 
-    public WebAssertion useCssElementForAssertion(String css) {
-        WebElement element = findElementByCss(css);
+    public <T extends Enum> WebAssertion useCssElementForAssertion(T css) {
+        WebElement element = driver.findElement(By.cssSelector(String.valueOf(css)));
         return new WebAssertion(element);
+    }
+
+    public WebAssertion useCssElementForAssertion(String css) {
+        WebElement element = driver.findElement(By.cssSelector(String.valueOf(css)));
+        return new WebAssertion(element);
+    }
+
+    public <T extends Enum> Web useCssElementForAssertionAnd(T css) {
+        WebElement element = driver.findElement(By.cssSelector(String.valueOf(css)));
+        return this;
     }
 
     public Web useCssElementForAssertionAnd(String css) {
@@ -78,9 +106,19 @@ public class Web {
         return this;
     }
 
+    public <T extends Enum> WebAssertion useXpathElementForAssertion(T xpath) {
+        WebElement element = driver.findElement(By.xpath(String.valueOf(xpath)));
+        return new WebAssertion(element);
+    }
+
     public WebAssertion useXpathElementForAssertion(String xpath) {
         WebElement element = findElementByXpath(xpath);
         return new WebAssertion(element);
+    }
+
+    public <T extends Enum> Web useXpathElementForAssertionAnd(T xpath) {
+        WebElement element = driver.findElement(By.xpath(String.valueOf(xpath)));
+        return this;
     }
 
     public Web useXpathElementForAssertionAnd(String xpath) {
@@ -88,14 +126,39 @@ public class Web {
         return this;
     }
 
+    public <T extends Enum> WebAssertion useXpathElementsForAssertion(T xpath) {
+        List<WebElement> elements = driver.findElements(By.xpath(String.valueOf(xpath)));
+        return new WebAssertion(elements);
+    }
+
     public WebAssertion useXpathElementsForAssertion(String xpath) {
         List<WebElement> elements = driver.findElements(By.xpath(xpath));
         return new WebAssertion(elements);
     }
 
+    public <T extends Enum> Web useXpathElementsForAssertionAnd(T xpath) {
+        List<WebElement> elements = driver.findElements(By.xpath(String.valueOf(xpath)));
+        return this;
+    }
+
+    public Web useXpathElementsForAssertionAnd(String xpath) {
+        List<WebElement> elements = driver.findElements(By.xpath(String.valueOf(xpath)));
+        return this;
+    }
+
+    public <T extends Enum> CustomWebElement useElementByCss(T css) {
+        WebElement element = driver.findElement(By.cssSelector(String.valueOf(css)));
+        return new CustomWebElement(element, this, driver);
+    }
+
     public CustomWebElement useElementByCss(String css) {
         WebElement element = findElementByCss(css);
-        return new CustomWebElement (element,this, driver);
+        return new CustomWebElement(element, this, driver);
+    }
+
+    public <T extends Enum> Web useElementByCssAnd(T css) {
+        WebElement element = driver.findElement(By.cssSelector(String.valueOf(css)));
+        return this;
     }
 
     public Web useElementByCssAnd(String css) {
@@ -103,10 +166,32 @@ public class Web {
         return this;
     }
 
+    public <T extends Enum> Web useElementsByCssAnd(T css) {
+        List<WebElement> elements = driver.findElements(By.cssSelector(String.valueOf(css)));
+        return this;
+    }
+
+    public Web useElementsByCssAnd(String css) {
+        List<WebElement> elements = driver.findElements(By.cssSelector(String.valueOf(css)));
+        return this;
+    }
+
+    public <T extends Enum> CustomWebElement useElementByXpath(T xpath) {
+        WebElement element = driver.findElement(By.xpath(String.valueOf(xpath)));
+        return new CustomWebElement(element, this, driver);
+    }
+
     public CustomWebElement useElementByXpath(String xpath) {
         WebElement element = findElementByXpath(xpath);
-        return new CustomWebElement(element,this, driver);
+        return new CustomWebElement(element, this, driver);
     }
+
+    public <T extends Enum> Web useElementByXpathAnd(T xpath) {
+        WebElement element = driver.findElement(By.xpath(String.valueOf(xpath)));
+        return this;
+    }
+
+    //TODO: rest of the structure using Enums page object pattern
 
     public Web useElementByXpathAnd(String xpath) {
         WebElement element = findElementByXpath(xpath);
@@ -116,7 +201,7 @@ public class Web {
     public CustomWebElement typeTextToInputFieldCss(String css, String value) {
         WebElement element = findElementByCss(css);
         element.sendKeys(value);
-    return new CustomWebElement(element, this, driver);
+        return new CustomWebElement(element, this, driver);
     }
 
     public Web typeTextToInputFieldCssAnd(String css, String value) {
@@ -130,7 +215,7 @@ public class Web {
         element.sendKeys(Keys.CONTROL + "a");
         element.sendKeys(Keys.DELETE);
         element.sendKeys(value);
-    return new CustomWebElement(element, this, driver);
+        return new CustomWebElement(element, this, driver);
     }
 
     public Web typeTextToInputFieldXpathAnd(String xpath, String value) {
@@ -141,7 +226,7 @@ public class Web {
 
     public CustomWebElement pressEnterUsingCss(String css) {
         WebElement element = findElementByCss(css);
-    return new CustomWebElement(element, this, driver);
+        return new CustomWebElement(element, this, driver);
     }
 
     public Web pressEnterUsingCssAnd(String css) {
@@ -151,7 +236,7 @@ public class Web {
 
     public CustomWebElement pressEnterUsingXpath(String xpath) {
         WebElement element = findElementByXpath(xpath);
-    return new CustomWebElement(element, this, driver);
+        return new CustomWebElement(element, this, driver);
     }
 
     public Web pressEnterUsingXpathAnd(String xpath) {
@@ -162,7 +247,7 @@ public class Web {
 
     public CustomWebElement useCssElementAndTextForDropdownList(String css) {
         WebElement element = findElementByCss(css);
-    return new CustomWebElement(element, this, driver);
+        return new CustomWebElement(element, this, driver);
     }
 
     public Web useCssElementAndTextForDropdownListAnd(String css) {
@@ -254,7 +339,7 @@ public class Web {
     }
 
     public WebAssertion useElementByNameAndAttributeForAssertion(String name, String attribute, String expectedText) {
-        WebElement element  = driver.findElement(By.name(name));
+        WebElement element = driver.findElement(By.name(name));
         String value = element.getAttribute(attribute).toString();
         Assert.assertEquals(value, expectedText);
         return new WebAssertion(element);
@@ -274,7 +359,7 @@ public class Web {
     public CustomWebElement useJSExecutor(String script) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         WebElement element = (WebElement) js.executeScript(script);
-    return new CustomWebElement(element, this, driver);
+        return new CustomWebElement(element, this, driver);
     }
 
     public WebAssertion useClassNameElementsForAssertion(String className) {
@@ -283,13 +368,13 @@ public class Web {
     }
 
 
-    public void useXpathListForSoftAssertion(String ... xpathList){
+    public void useXpathListForSoftAssertion(String... xpathList) {
         SoftAssert softAssert = new SoftAssert();
-        for (String xpath : xpathList ){
+        for (String xpath : xpathList) {
             try {
                 driver.findElement(By.xpath(xpath));
             } catch (Exception e) {
-                softAssert.fail( "Element with xpath + " + xpath + "not found");
+                softAssert.fail("Element with xpath + " + xpath + "not found");
             }
         }
         softAssert.assertAll();
@@ -297,9 +382,9 @@ public class Web {
 
     public Web useJavaScriptAnd(String xpath, String script) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        if (xpath!=null){
-            WebElement element =  driver.findElement(By.xpath(xpath));
-            js.executeScript(script,element);
+        if (xpath != null) {
+            WebElement element = driver.findElement(By.xpath(xpath));
+            js.executeScript(script, element);
         } else {
             js.executeScript(script);
         }
@@ -308,20 +393,20 @@ public class Web {
 
     public WebAssertion useJSExecutorForAssertion(String script) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        List <WebElement> elements = (List<WebElement>) js.executeScript(script);
+        List<WebElement> elements = (List<WebElement>) js.executeScript(script);
         return new WebAssertion(elements);
     }
 
-    public WebAssertion useXpathList (String ... xpathList){
+    public WebAssertion useXpathList(String... xpathList) {
         List<WebElement> elementList = new ArrayList<>();
         for (String xpath : xpathList) {
-            WebElement element =  findElementByXpath(xpath);
+            WebElement element = findElementByXpath(xpath);
             elementList.add(element);
         }
         return new WebAssertion(elementList);
     }
 
-    public WebAssertion useUrlForAssertion(String ... params){
+    public WebAssertion useUrlForAssertion(String... params) {
         String url = driver.getCurrentUrl();
         return new WebAssertion(url, params);
     }

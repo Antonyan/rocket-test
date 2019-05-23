@@ -1,10 +1,7 @@
 package core.modules.web.models;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.logging.LogEntries;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.Logs;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
@@ -13,7 +10,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,16 +42,35 @@ public class WebAssertion {
     }
 
     public void shouldContainText(String text) {
-        Assert.assertEquals(text,elementForAssert.getText(), "Element " + elementForAssert.toString() + " doesn't have text" + text);
+        Assert.assertEquals(text, elementForAssert.getText(), "Element " + elementForAssert.toString() + " doesn't have text" + text);
 
     }
 
-    public void shouldBeDisplayed(boolean condition) {
+    //TODO: add few more methods to support javascript, css and xpath assertions
+
+    public void shouldBeVisibleByCss(boolean condition, String cssSelector) {
         if (condition) {
-            Assert.assertTrue(elementForAssert.isDisplayed(), "Element " + elementForAssert.toString() + " is not displayed");
+            Assert.assertTrue(isElementPresent(By.cssSelector(cssSelector)), "Element is not visible");
             return;
         }
-        Assert.assertFalse(elementForAssert.isDisplayed(), "Element " + elementForAssert.toString() + " is displayed");
+        Assert.assertFalse(isElementPresent(By.cssSelector(cssSelector)), "Element is visible");
+    }
+
+    public void shouldBeVisibleByXpath(boolean condition, String xpathSelector) {
+        if (condition) {
+            Assert.assertTrue(isElementPresent(By.xpath(xpathSelector)));
+            return;
+        }
+        Assert.assertFalse(isElementPresent(By.xpath(xpathSelector)));
+    }
+
+    public boolean isElementPresent(By selector) {
+        try {
+            elementForAssert.findElement(selector);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void elementListShouldBeDisplayed(boolean condition) {
