@@ -106,6 +106,30 @@ public class Web {
         return this;
     }
 
+    public <T extends Enum> Web useCssJavascriptInnerTextForAssertionAnd(T cssSelector) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("return document.querySelector("+ String.valueOf(cssSelector) +").innerText ");
+        return this;
+    }
+
+    public Web useCssJavascriptInnerTextForAssertionAnd(String cssSelector) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("return document.querySelector("+ cssSelector +").innerText ");
+        return this;
+    }
+
+   // public <T extends Enum> WebAssertion useCssJavascriptInnerTextForAssertion(T cssSelector) {
+   //     JavascriptExecutor js = (JavascriptExecutor) driver;
+   //     js.executeScript("return document.querySelector("+ cssSelector +").innerText ");
+   //     return new WebAssertion(js);
+   // }
+
+    public WebAssertion useCssJavascriptInnerTextForAssertion(String cssSelector) {
+        WebElement element = driver.findElement(By.cssSelector(String.valueOf(cssSelector)));
+        return new WebAssertion(element);
+    }
+
+
     public <T extends Enum> WebAssertion useXpathElementForAssertion(T xpath) {
         WebElement element = driver.findElement(By.xpath(String.valueOf(xpath)));
         return new WebAssertion(element);

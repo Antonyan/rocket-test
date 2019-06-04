@@ -27,6 +27,6 @@ public class ExampleWebTest extends WebTest {
             .useElementByLinkText("View Shopping Cart")
             .clickAnd()
             .useXpathElementForAssertion("//*[@id=\"32895894410-14:200006151\"]/td[1]")
-            .shouldBeDisplayed(true);
+            .shouldBeVisibleByCss(true, "//*[@id=\"32895894410-14:200006151\"]/td[1]");
     }
 }
